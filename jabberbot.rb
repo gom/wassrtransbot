@@ -11,6 +11,7 @@ class JabberBot
       @client.client.add_message_callback {|msg|
         self.process msg
       }
+      self.check
       sleep 5
     }
   end
@@ -26,8 +27,8 @@ class JabberBot
     Thread.exit
   end
 
-  def connected?
-    return @client.connected?
+  def check
+    @client.reconnect unless @client.connected?
   end
 
   protected :close, :process

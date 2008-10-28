@@ -3,15 +3,14 @@
 $LOAD_PATH << File.dirname(__FILE__)
 require "webrick"
 require "wassr_transbot"
+require "yaml"
 
 # Entry Point
-mode = ARGV.shift
-id = ARGV.shift
-pass = ARGV.shift
+data = YAML.load(ARGF.read)
 WEBrick::Daemon.start {
-  r = WassrTransBot.new(id,pass)
-  r.mode = mode
+  r = WassrTransBot.new(data['id'],data['pass'])
+  r.mode = data['mode']
   loop {
-    sleep 1
+    sleep 10
   }
 }
