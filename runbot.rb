@@ -11,6 +11,7 @@ WEBrick::Daemon.start {
   r = WassrTransBot.new(data['id'],data['pass'])
   r.mode = data['mode']
   loop {
+    r.check
     sleep 10
   }
 }
