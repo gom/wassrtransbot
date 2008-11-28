@@ -10,7 +10,8 @@ class WassrTransBot < JabberBot
   @mode = ""
 
   def receiver msg
-    return unless msg.body =~ /(.*): (.*) >|&gt; (#{@mode}) /
+    self.deliver msg.from,msg.body
+     return unless  msg.body =~ /(.*): (.*) (>|&gt;) #{@mode}/
     sent = $1
     message = $2
 
@@ -22,7 +23,7 @@ class WassrTransBot < JabberBot
         after = GTrans::trans(message,:en,:jp)
       end
       sendmsg = "@#{sent} #{after}"
-      
+
       self.deliver(msg.from, sendmsg)
       self.logging "From:#{sent} msg:#{message} ,To:#{sendmsg}"
     rescue => e
@@ -38,3 +39,4 @@ data = YAML.load(ARGF.read)
 bot = WassrTransBot.new(data['id'],data['pass'])
 bot.mode = data['mode']
 bot.start
+

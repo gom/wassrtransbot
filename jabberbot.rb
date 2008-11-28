@@ -28,7 +28,6 @@ class JabberBot
     rescue => e
       raise CONNECTOR_ERR + e
     end
-    
     @client.client.add_message_callback {|msg|
       begin
         self.receiver msg
@@ -40,21 +39,38 @@ class JabberBot
   end
 
   #
-  #=== Start JabberBot with WEBrick Daemon
+  #=== Start JabberBot with Daemon
   #
   def start
     begin
-      WEBrick::Daemon.start {
+      daemon {
         loop {
           self.check
-          sleep 10
+          sleep 5
         }
       }
     rescue => e
       self.logging "[#{Time.now}]#{$0}: #{e}"
     end
   end
-  
+
+  def daemon &proc
+    Thread.fork {
+      Process.setsid
+      pidfile = "#{$0}.pid"
+      open(pidfile,'w') {|f| f << Process.pid }
+      #File::umask(0)
+      Dir.chdir('/')
+      File.open('/dev/null'){|f|
+        STDIN.reopen f
+        STDOUT.reopen f
+        STDERR.reopen f
+      }
+      yield
+    }
+    exit! 0
+  end
+
   #
   #=== Connecting Check
   # if client is disconnected, try reconnecting.
