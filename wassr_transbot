@@ -10,7 +10,6 @@ class WassrTransBot < JabberBot
   @mode = ""
 
   def receiver msg
-    self.deliver msg.from,msg.body
      return unless  msg.body =~ /(.*): (.*) (>|&gt;) #{@mode}/
     sent = $1
     message = $2
@@ -32,11 +31,16 @@ class WassrTransBot < JabberBot
   end
 end
 
+
 #
 #== Entry Point
 #
 data = YAML.load(ARGF.read)
-bot = WassrTransBot.new(data['id'],data['pass'])
-bot.mode = data['mode']
-bot.start
-
+WassrTransBot::daemon {
+  bot = WassrTransBot.new(data['id'],data['pass'])
+  bot.mode = data['mode']
+  loop {
+    bot.check
+    sleep 5
+  }
+}
