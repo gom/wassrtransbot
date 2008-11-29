@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 require "rubygems"
 require "xmpp4r-simple"
-require "webrick"
 
 #
 #= Jabber Client for auto messaging
@@ -41,34 +40,28 @@ class JabberBot
   #
   #=== Start JabberBot with Daemon
   #
-  def start
+  def self.daemon &bl
     begin
-      daemon {
-        loop {
-          self.check
-          sleep 5
+      return yield if $DEBUG
+      fork {
+        Process.setsid
+        pidfile = "#{$0}.pid"
+        open(pidfile,'w') {|f| f << Process.pid }
+        fork {
+          File::umask(0)
+          Dir::chdir('/')
+          File.open('/dev/null'){|f|
+            STDIN.reopen f
+            STDOUT.reopen f
+            STDERR.reopen f
+          }
         }
+        yield
       }
+      exit! 0
     rescue => e
       self.logging "[#{Time.now}]#{$0}: #{e}"
     end
-  end
-
-  def daemon &proc
-    Thread.fork {
-      Process.setsid
-      pidfile = "#{$0}.pid"
-      open(pidfile,'w') {|f| f << Process.pid }
-      #File::umask(0)
-      Dir.chdir('/')
-      File.open('/dev/null'){|f|
-        STDIN.reopen f
-        STDOUT.reopen f
-        STDERR.reopen f
-      }
-      yield
-    }
-    exit! 0
   end
 
   #
@@ -81,7 +74,7 @@ class JabberBot
         self.logging "[#{Time.now}]Disconnected! Try Reconnecting!"
         @client.reconnect
       end
-      @client.status(nil, "I'm alive")
+      @client.status(nil, "")
     rescue => e
       raise CONNECTOR_ERR + e
     end
