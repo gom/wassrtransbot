@@ -12,7 +12,7 @@ class GTrans
   #
   # define to use language
   #
-  Mode = {:jp=>Language::JAPANESE,
+  Mode = {:ja=>Language::JAPANESE,
           :en=>Language::ENGLISH}
 
   # ==execute transration
@@ -23,13 +23,17 @@ class GTrans
   #
   # [return] translated sentences
   #
-  def self.trans sentence,from,to
+  def self.trans sentence,mode
+    mode =~ /(\w{2})2(\w{2})/
+    return "no Transrate Mode!" if $1==nil
+
+    from = Mode[$1.to_sym]
+    to = Mode[$2.to_sym]
     begin
-      from = Mode[from.to_sym]
-      to = Mode[to.to_sym]
+      result = Translate.t(sentence, from, to)
     rescue => e
       return "Error: no Transrate Mode!"
     end
-    result = Translate.t(sentence, from, to)
+
   end
 end

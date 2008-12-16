@@ -1,0 +1,14 @@
+#!/opt/local/bin/ruby
+require 'wassr_transbot'
+require 'yaml'
+
+#== EntryPoint
+data = YAML.load(ARGF.read)
+WassrTransBot::daemon {
+  bot = WassrTransBot.new(data['id'],data['pass'])
+  bot.mode = data['mode']
+  loop {
+    bot.check
+    sleep 5
+  }
+}
