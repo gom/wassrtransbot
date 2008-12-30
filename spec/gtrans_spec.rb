@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require 'gtrans'
+require 'lib/gtrans'
 
 describe GTrans do
   describe "when translating" do

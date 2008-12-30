@@ -1,5 +1,5 @@
-#!/opt/local/bin/ruby
-require 'wassr_transbot'
+#!/usr/bin/ruby
+require 'lib/wassr_transbot'
 require 'yaml'
 
 #== EntryPoint

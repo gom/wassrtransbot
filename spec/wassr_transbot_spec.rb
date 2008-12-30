@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require 'wassr_transbot'
+require 'lib/wassr_transbot'
 require 'yaml'
 
 YAMLFILE = 'spec/test.yaml'

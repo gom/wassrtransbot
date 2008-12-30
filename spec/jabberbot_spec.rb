@@ -1,4 +1,4 @@
-require 'jabberbot'
+require 'lib/jabberbot'
 require 'yaml'
 
 #
@@ -21,7 +21,7 @@ describe JabberBot do
       @user = data['test1']['id']
       @pass = data['test1']['pass']
     end
-    
+
     it "should log in" do
       JabberBot.new(@user, @pass).class.should == JabberBot
     end
