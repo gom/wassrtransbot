@@ -13,6 +13,7 @@ class JabberBot
   DELIVER_ERR = "I can't delivery the message: "
   DISCONNECTOR_ERR = "I can't leave the server...: "
 
+  # TODO:: Where save logfile?
   LOG_FILE = "received.log"
 
   #
@@ -42,23 +43,19 @@ class JabberBot
   #
   def self.daemon &bl
     begin
-      return yield if $DEBUG
-      fork {
-        Process.setsid
-        pidfile = "#{$0}.pid"
-        open(pidfile,'w') {|f| f << Process.pid }
-        fork {
-          File::umask(0)
-          Dir::chdir('/')
-          File.open('/dev/null'){|f|
-            STDIN.reopen f
-            STDOUT.reopen f
-            STDERR.reopen f
-          }
-        }
-        yield
+      exit!(0) if fork
+      Process.setsid
+      #pidfile = "#{$0}.pid"
+      #open(pidfile,'w') {|f| f << Process.pid }
+      exit!(0) if fork
+      File::umask(0)
+      Dir::chdir('/')
+      File.open('/dev/null'){|f|
+        STDIN.reopen f
+        STDOUT.reopen(LOG_FILE, "w")
+        STDERR.reopen(LOG_FILE, "w")
       }
-      exit! 0
+      yield
     rescue => e
       self.logging "[#{Time.now}]#{$0}: #{e}"
     end
