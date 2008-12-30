@@ -52,8 +52,8 @@ class JabberBot
       Dir::chdir('/')
       File.open('/dev/null'){|f|
         STDIN.reopen f
-        STDOUT.reopen(LOG_FILE, "w")
-        STDERR.reopen(LOG_FILE, "w")
+        STDOUT.reopen(f, "w")
+        STDERR.reopen(f, "w")
       }
       yield
     rescue => e
