@@ -42,23 +42,19 @@ class JabberBot
   #=== Start JabberBot with Daemon
   #
   def self.daemon &bl
-    begin
-      exit!(0) if fork
-      Process.setsid
-      #pidfile = "#{$0}.pid"
-      #open(pidfile,'w') {|f| f << Process.pid }
-      exit!(0) if fork
-      File::umask(0)
-      Dir::chdir('/')
-      File.open('/dev/null'){|f|
-        STDIN.reopen f
-        STDOUT.reopen(f, "w")
-        STDERR.reopen(f, "w")
-      }
-      yield
-    rescue => e
-      self.logging "[#{Time.now}]#{$0}: #{e}"
-    end
+    exit!(0) if fork
+    Process.setsid
+    #pidfile = "#{$0}.pid"
+    #open(pidfile,'w') {|f| f << Process.pid }
+    exit!(0) if fork
+    File::umask(0)
+    Dir::chdir('/')
+    File.open('/dev/null'){|f|
+      STDIN.reopen f
+      STDOUT.reopen f
+      STDERR.reopen f
+    }
+    yield
   end
 
   #
