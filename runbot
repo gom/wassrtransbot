@@ -1,14 +1,40 @@
 #!/usr/bin/ruby
 require 'lib/wassr_transbot'
 require 'yaml'
+require 'optparse'
+
+if ARGV.size == 0
+  puts "Usage: runbot [-l logfile] YAMLfile"
+  exit 0
+end
+
+log=''
+ARGV.options {|opt|
+  begin
+    opt.on('-l', '--log-file=Absolutely PATH of logfile') {|v| log=v }
+    opt.parse!
+  rescue OptionParser::MissingArgument => e
+    puts 'No Option Argument'
+    exit 1
+  rescue OptionParser::InvalidOption => e
+    puts 'Invalid Option'
+    exit 1
+  end
+}
+
+if ARGV.size == 0
+  puts 'No YAML file'
+  exit 1
+end
 
 #== EntryPoint
 data = YAML.load(ARGF.read)
 WassrTransBot::daemon {
   bot = WassrTransBot.new(data['id'],data['pass'])
   bot.mode = data['mode']
+  bot.log_file = log unless log==''
   loop {
     bot.check
-    sleep 5
+    sleep 10
   }
 }
