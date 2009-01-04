@@ -13,8 +13,8 @@ class JabberBot
   DELIVER_ERR = "I can't delivery the message: "
   DISCONNECTOR_ERR = "I can't leave the server...: "
 
-  # TODO:: Where save logfile?
-  LOG_FILE = "received.log"
+  attr_accessor :log_file
+  @log_file = "received.log"
 
   #
   #===Constractor
@@ -114,7 +114,7 @@ class JabberBot
   #[msg] a logged message
   #
   def logging msg
-    File.open(LOG_FILE, "a"){|f|
+    File.open(@log_file, "a"){|f|
       f.puts "[#{Time.now}] #{$0}: #{msg}"
     }
   end
