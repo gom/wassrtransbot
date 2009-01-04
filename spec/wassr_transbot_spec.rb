@@ -12,13 +12,13 @@ end
 describe WassrTransBot, "with running" do
   before :all do
     data = YAML.load_file(YAMLFILE)
-    @filename='received.log'
     @user1 = data['test1']['id']
     @pass1 = data['test1']['pass']
     @user2 = data['test2']['id']
     @pass2 = data['test2']['pass']
     @wassr = WassrTransBot.new(@user1,@pass1)
     @test = TestBot.new(@user2, @pass2)
+    @filename = @wassr.log_file
   end
 
   def testres msg, result

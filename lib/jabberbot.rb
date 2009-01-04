@@ -14,7 +14,6 @@ class JabberBot
   DISCONNECTOR_ERR = "I can't leave the server...: "
 
   attr_accessor :log_file
-  @log_file = "received.log"
 
   #
   #===Constractor
@@ -25,6 +24,7 @@ class JabberBot
   def initialize user,pass
     begin
       @client = Jabber::Simple.new(user,pass)
+      @log_file = "received.log"
     rescue => e
       raise CONNECTOR_ERR + e
     end

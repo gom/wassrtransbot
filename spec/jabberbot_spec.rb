@@ -37,12 +37,12 @@ describe JabberBot do
   describe "when running" do
     before :all do
       data = YAML.load_file YAMLFILE
-      @filename="received.log"
       @user1 = data['test1']['id']
       @pass1 = data['test1']['pass']
       @user2 = data['test2']['id']
       @pass2 = data['test2']['pass']
       @jabber = JabberBot.new(@user1, @pass1)
+      @filename = @jabber.log_file
     end
 
     it "should be checking connecting" do
